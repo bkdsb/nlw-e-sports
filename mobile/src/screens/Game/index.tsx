@@ -26,7 +26,8 @@
 // npm install @react-navigation/native-stack
 
 
-import { View, Image, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Image, TouchableOpacity, FlatList, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 //Importamos do React Navigation o useRoute para resgatarmos as informações que vem das rotas 
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -40,10 +41,13 @@ import { styles } from './styles';
 
 import { GameParams } from '../../@types/navigation';
 
+import { DuoCard, DuoCardProps } from '../../components/DuoCard';
 import { Heading } from '../../components/Heading';
 import { Background } from '../../components/Background';
 
 export function Game() {
+
+  const [duos, setDuos] = useState<DuoCardProps[]>([]);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -53,6 +57,15 @@ export function Game() {
   function handleGoBack(){
     navigation.goBack();
   }
+
+  useEffect(() => {
+    fetch(`http://192.168.1.14:3333/games/${game.id}/ads`)
+    .then(response => response.json())
+    .then(data => setDuos(data));
+  },
+  []);
+  
+
 
   return (
     <Background>
@@ -85,6 +98,25 @@ export function Game() {
       subtitle="Conecte-se e comece a jogar!"
       />
 
+      <FlatList 
+      data={duos}
+      keyExtractor={item => item.id}
+      renderItem={({item}) => (
+        <DuoCard 
+        data={item}
+        onConnect={()=> { }}
+        />
+      )}
+      horizontal
+      style={styles.containerList}
+      contentContainerStyle={[duos.length > 0 ? styles.contentList : styles.emptyListContent ]}
+      showsHorizontalScrollIndicator={false}
+      ListEmptyComponent={() => (
+        <Text style={styles.emptyListText}>
+          Não há anúncios publicados ainda.
+        </Text>
+      )}
+      />
       </SafeAreaView>
     </Background>
   );
