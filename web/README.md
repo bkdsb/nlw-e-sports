@@ -237,12 +237,33 @@ Utilizamos também o CheckBox primitivo do Radix, para estilizarmos como bem ent
 npm install @radix-ui/react-checkbox
 ```
 
-Antes de utiliza-lo também precisamos importa-lo
+Antes de utiliza-lo também precisamos importa-lo:
 
 ```js
 import * as Checkbox from '@radix-ui/react-checkbox';
 ```
 
+Instalamos também o select:
+
+```js
+npm install @radix-ui/react-select
+```
+
+Instalamos também o Toggle Group:
+
+```js
+npm install @radix-ui/react-toggle-group
+```
+
+Importação:
+
+```js
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
+```
+
+Para desinstalar qualquer package:
+
+``npm un @package``
 
 ## Para importarmos todos os componentes que existem dentro de uma biblioteca
 
