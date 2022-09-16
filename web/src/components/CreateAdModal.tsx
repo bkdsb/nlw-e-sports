@@ -4,13 +4,14 @@ import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { Input } from './Form/Input';
 import { Check, GameController } from 'phosphor-react';
 import { useEffect, useState, FormEvent } from 'react';
+import axios from 'axios';
 
 interface Game {
   id: string;
   title: string;
 }
 
-      
+
 
 export function CreateAdModal() {
 
@@ -21,28 +22,63 @@ export function CreateAdModal() {
   const [useVoiceChannel, setUseVoiceChannel] = useState(false)
 
 
+  //Então por utilizar o axio, pegamos a resposta passamo para setGames e juntamos na data, deixando o código mais clean também
+
   useEffect(() => {
-    fetch('http://localhost:3333/games').then(response => response.json()).then(data => {
-      setGames(data)
-    })
+    axios('http://localhost:3333/games')
+      .then(response => {
+        setGames(response.data)
+      })
   }, [])
 
   //No React podemos passar um event listener no formulario para quando ele for enviado com "onSubmit={}" que é uma função que será executada quando for enviado -  <form onSubmit={handleCreateAd}
 
-    // Por padrão o form no HTML tenta redirecionar o User para outra Screen, mas nós não queremos esse comportamento e preveni-lo
+  // Por padrão o form no HTML tenta redirecionar o User para outra Screen, mas nós não queremos esse comportamento e preveni-lo
 
-    // Então para fazer isso, a função recebe um event, que deve ser importado do React - import { FormEvent } from 'react' e então damos um event.preventDefault(); para prevenir o evento padrão
+  // Então para fazer isso, a função recebe um event, que deve ser importado do React - import { FormEvent } from 'react' e então damos um event.preventDefault(); para prevenir o evento padrão
 
-    // Para pegar os dados do form criamos um formData, com new FormData() que é um objeto nativo do JavaScript e então digo para ele event.target as HTMLFormElement, que o alvo deve ser um formulário criar uma data para pegar os objetos dos forms e guarda-los - const data = Object.fromEntries(formData);
+  // Para pegar os dados do form criamos um formData, com new FormData() que é um objeto nativo do JavaScript e então digo para ele event.target as HTMLFormElement, que o alvo deve ser um formulário criar uma data para pegar os objetos dos forms e guarda-los - const data = Object.fromEntries(formData);
 
-  function handleCreateAd(event: FormEvent) {
+  //Para cadastrar as informações na API podemos usar o Fetch ou uma outra biblioteca
+
+  //A api Fetch é muito mais verbosa e suscetível a cometer alguns erros, então vamos utilizar o axios
+
+  //Para instalar: npm i axios
+
+  // Para capturar se vai dar algum erro, transformamos a função em assíncrona, adicionamos um try envolvendo o axios e um catch para informar o erro
+  
+  async function handleCreateAd(event: FormEvent) {
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement)
     const data = Object.fromEntries(formData);
-    
-    console.log(weekDays)
-  console.log(data)
+
+    //Para não serem enviados formulários vazios devemos fazer algum tipo de validação
+
+    //Dicas para elevar o nível da aplicação - tornar responsiva, adicionar um carroussel [keen-slider] caso mais games sejam adicionados - adicionar o componente do radix para o selected no "qual o game?" - e também validações, dar uma olhada numa biblioteca chamada React Hook Form na Doc Schema Validation
+
+    //Adicionar login do discord
+
+    if (!data.name) {
+      return;
+    }
+
+    try {
+     await axios.post(`http://localhost:3333/games/${data.game}/ads`, {
+      name: data.name,
+      yearsPlaying: Number(data.yearsPlaying),
+      discord: data.discord,
+      weekDays: weekDays.map(Number),
+      hourStart: data.hourStart,
+      hourEnd: data.hourEnd,
+      useVoiceChannel: useVoiceChannel
+    })
+
+    alert('Anúncio criado com sucesso!')
+    } catch (err) {
+    console.log(err);
+    alert('Erro ao criar o anúncio!')
+    }
   }
 
 
@@ -173,16 +209,17 @@ export function CreateAdModal() {
 
 
           <label className="mt-2 flex items-center gap-2 text-sm ">
-            <Checkbox.Root 
-            onCheckedChange={(checked) => {
-              if (checked === true) {
-                setUseVoiceChannel(true)
-              } else {
-                setUseVoiceChannel(false)
-              }
-            }}
+            <Checkbox.Root
+              checked={useVoiceChannel}
+              onCheckedChange={(checked) => {
+                if (checked === true) {
+                  setUseVoiceChannel(true)
+                } else {
+                  setUseVoiceChannel(false)
+                }
+              }}
 
-            className="w-6 h-6 p-1 rounded bg-zinc-900">
+              className="w-6 h-6 p-1 rounded bg-zinc-900">
               <Checkbox.Indicator>
                 <Check className="w-4 h-4 text-emerald-400" />
               </Checkbox.Indicator>
