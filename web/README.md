@@ -231,6 +231,19 @@ Nesse caso iremos utilizar apenas o ``dialog``.
 npm install @radix-ui/react-dialog
 ```
 
+Utilizamos também o CheckBox primitivo do Radix, para estilizarmos como bem entendermos:
+
+```js
+npm install @radix-ui/react-checkbox
+```
+
+Antes de utiliza-lo também precisamos importa-lo
+
+```js
+import * as Checkbox from '@radix-ui/react-checkbox';
+```
+
+
 ## Para importarmos todos os componentes que existem dentro de uma biblioteca
 
 No caso o Dialog é um prefixo, então todos os outros componentes que tenham ele serão puxados
