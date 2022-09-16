@@ -1,4 +1,9 @@
+import { useRef, useEffect } from 'react';
+
 import { StatusBar } from 'react-native';
+
+import * as Notifications from 'expo-notifications';
+
 
 //O use fonts é responsável pelo carregamento da nossa fonte, como instalamos o componente expo-google-fonts, importamos ele também
 
@@ -9,12 +14,17 @@ import {
   Inter_700Bold,
   Inter_900Black
 } from '@expo-google-fonts/inter';
+import { Subscription } from 'expo-modules-core';
 
 //Ao invés de charmamos pelas pages, chamamos pelas rotas
 
 import { Routes } from './src/routes';
-import { Background } from './src/components/Background';
 import { Loading } from './src/components/Loading';
+import { Background } from './src/components/Background';
+
+import './src/services/notificationConfigs';
+import { getPushNotificationToken } from './src/services/getPushNotificationToken';
+
 
 // O componente é uma função que retorna o que deve ser renderizado na tela
 // A view é equivalente a uma div
@@ -47,6 +57,32 @@ export default function App() {
       Inter_700Bold,
       Inter_900Black
     });
+
+
+  const getNotificationListener = useRef<Subscription>();
+  const responseNotificationListener = useRef<Subscription>();
+
+
+  useEffect(() => {
+    getPushNotificationToken();
+  })
+
+  useEffect(() => {
+    getNotificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log(notification)
+    });
+
+    responseNotificationListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response)
+    });
+
+    return () => {
+      if (getNotificationListener.current && responseNotificationListener.current) {
+        Notifications.removeNotificationSubscription(getNotificationListener.current)
+        Notifications.removeNotificationSubscription(responseNotificationListener.current)
+      }
+    }
+  }, []);
 
   return (
     // <View style={styles.container}>

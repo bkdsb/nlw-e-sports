@@ -128,6 +128,30 @@ Instalamos a estratégia que utilizaremos para navegar que é a Stack
 npm install @react-navigation/native-stack
 ```
 
+Expo-ClipBoard fornece uma interface para obter e definir o conteúdo da área de transferência no Android, iOS e Web:
+
+```js
+expo install expo-clipboard
+```
+
+Importação:
+
+`import * as Clipboard from 'expo-clipboard';`
+
+Instalando Notificações:
+
+```js
+expo install expo-notifications
+```
+
+`import * as Notifications from 'expo-notifications';`
+
+Core do expo:
+
+```js
+expo install expo-modules-core
+```
+
 ## Conhecimentos Gerais
 
 Tipo de função que não retorna nada ``() => void``
