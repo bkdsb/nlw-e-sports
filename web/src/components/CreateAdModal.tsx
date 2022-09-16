@@ -3,12 +3,14 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { Input } from './Form/Input';
 import { Check, GameController } from 'phosphor-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 
 interface Game {
   id: string;
   title: string;
 }
+
+      
 
 export function CreateAdModal() {
 
@@ -16,6 +18,7 @@ export function CreateAdModal() {
 
   const [games, setGames] = useState<Game[]>([])
   const [weekDays, setWeekDays] = useState<string[]>([])
+  const [useVoiceChannel, setUseVoiceChannel] = useState(false)
 
 
   useEffect(() => {
@@ -23,6 +26,26 @@ export function CreateAdModal() {
       setGames(data)
     })
   }, [])
+
+  //No React podemos passar um event listener no formulario para quando ele for enviado com "onSubmit={}" que é uma função que será executada quando for enviado -  <form onSubmit={handleCreateAd}
+
+    // Por padrão o form no HTML tenta redirecionar o User para outra Screen, mas nós não queremos esse comportamento e preveni-lo
+
+    // Então para fazer isso, a função recebe um event, que deve ser importado do React - import { FormEvent } from 'react' e então damos um event.preventDefault(); para prevenir o evento padrão
+
+    // Para pegar os dados do form criamos um formData, com new FormData() que é um objeto nativo do JavaScript e então digo para ele event.target as HTMLFormElement, que o alvo deve ser um formulário criar uma data para pegar os objetos dos forms e guarda-los - const data = Object.fromEntries(formData);
+
+  function handleCreateAd(event: FormEvent) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement)
+    const data = Object.fromEntries(formData);
+    
+    console.log(weekDays)
+  console.log(data)
+  }
+
+
 
 
   return (
@@ -34,13 +57,17 @@ export function CreateAdModal() {
           Publique um anúncio
         </Dialog.Title>
 
-        <form className="mt-8 flex flex-col gap-4">
+
+
+
+        <form onSubmit={handleCreateAd} className="mt-8 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label htmlFor="game" className="font-semibold ">Qual o game?</label>
             <select
-              defaultValue=""
+              name="game"
               id="game"
               className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none"
+              defaultValue=""
             >
 
               <option disabled value="">Selecione o game que deseja jogar</option>
@@ -54,17 +81,17 @@ export function CreateAdModal() {
 
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Seu nome (ou nickname)</label>
-            <Input id="name" placeholder="Como te chamam dentro do game?" />
+            <Input name="name" id="name" placeholder="Como te chamam dentro do game?" />
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
               <label htmlFor="yearsPlaying">Joga há quantos anos?</label>
-              <Input id="yearsPlaying" type="number" placeholder="Tudo bem ser ZERO" />
+              <Input name="yearsPlaying" id="yearsPlaying" type="number" placeholder="Tudo bem ser ZERO" />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="discord">Qual seu Discord?</label>
-              <Input id="discord" type="text" placeholder="Usuario#0000" />
+              <Input name="discord" id="discord" type="text" placeholder="Usuario#0000" />
             </div>
           </div>
 
@@ -138,15 +165,24 @@ export function CreateAdModal() {
             <div className="flex flex-col flex-1">
               <label htmlFor="hourStart">Qual horário do dia?</label>
               <div className="grid grid-cols-2 gap-2">
-                <Input id="hourStart" type="time" placeholder="De" />
-                <Input id="hourEnd" type="time" placeholder="Até" />
+                <Input name="hourStart" id="hourStart" type="time" placeholder="De" />
+                <Input name="hourEnd" id="hourEnd" type="time" placeholder="Até" />
               </div>
             </div>
           </div>
 
 
           <label className="mt-2 flex items-center gap-2 text-sm ">
-            <Checkbox.Root className="w-6 h-6 p-1 rounded bg-zinc-900">
+            <Checkbox.Root 
+            onCheckedChange={(checked) => {
+              if (checked === true) {
+                setUseVoiceChannel(true)
+              } else {
+                setUseVoiceChannel(false)
+              }
+            }}
+
+            className="w-6 h-6 p-1 rounded bg-zinc-900">
               <Checkbox.Indicator>
                 <Check className="w-4 h-4 text-emerald-400" />
               </Checkbox.Indicator>
