@@ -1,5 +1,3 @@
-// Declarando que a home é undefined, isso significa que a rota não precisa de nenhum parametro
-
 export interface GameParams {
   id: string;
   title: string;

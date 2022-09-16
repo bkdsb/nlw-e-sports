@@ -1,16 +1,11 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 
-//Imporamos da biblioteca os icons como se fossem componentes
 import { GameController } from 'phosphor-react-native';
 
 import { DuoInfo } from '../DuoInfo';
 
 import { styles } from './styles';
 import { THEME } from '../../theme';
-
-//Instalamos uma biblioteca de icons para o React Native, Phosphor Icons, com o comando npm install --save phosphor-react-native
-
-// Também instalamos uma biblioteca do expo svg com o comando: o expo install react-native-svg
 
 export interface DuoCardProps {
   id: string; 

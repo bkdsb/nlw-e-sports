@@ -1,8 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { THEME } from '../../theme';
 
-//Estilização do componente Heading
-
 export const styles = StyleSheet.create({
   container: {
     width: '100%',

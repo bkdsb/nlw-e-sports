@@ -1,5 +1,3 @@
-// ActivityIndicator é o componente para sinalizar o processo de loading 
-
 import { View, ActivityIndicator } from 'react-native';
 import { THEME } from '../../theme';
 
